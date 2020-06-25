@@ -71,9 +71,9 @@ def page_not_found(error):
 
 
 if __name__ == '__main__':
-    # with app.test_request_context():
-        # print(url_for('daum'))
-        # print(url_for('naver'))
+    with app.test_request_context():
+        print(url_for('daum'))
+        print(url_for('naver'))
     app.run(debug=True)
 
 
