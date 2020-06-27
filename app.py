@@ -1,5 +1,11 @@
 from flask import Flask, request, render_template, redirect, url_for, abort
+
+
+import game
+
 app = Flask(__name__)
+
+
 
 @app.route('/')
 def index():
@@ -13,7 +19,13 @@ def hello():
 
 @app.route('/hello/<name>')
 def hellovar(name):
-    return 'Hello, {}'.format(name)
+    character = game.set_character(name)
+    return "{0}님 반갑습니다." .format(character["닉네임"]) 
+
+@app.route('/game')
+def ame():
+    return "{0}님 반갑습니다." .format(character["닉네임"]) 
+
 
 
 @app.route('/input/<int:num>')    
@@ -28,6 +40,49 @@ def input(num):
     else:
         return "없어요"
     return "hello {}".format(name)
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+
+# @app.route('/method', methods=['GET', 'POST'])    
+# def method():
+#     if request.method == 'GET':
+#         return "GET으로 전달된 데이터"
+     
+#     else:
+#         id = request.form['id']
+#         pw = request.form['pw']
+        
+#         if (id == 'aaa' and pw == '1234'):
+#             print(id, pw)
+#             root= Tk()
+#             root.withdraw()
+#             return msg.showinfo('로그인 성공!' ,'아이디: {} 패스워드: {}'.format(id, pw))
+#         else:
+#             root= Tk()
+#             root.withdraw()
+#             return msg.showinfo("로그인 실패", "잘못 입력하셨습니다.")
+
+
+
+@app.route('/form')
+def login():
+    return render_template('test1.html')
+
+
+@app.route('/method', methods=['GET', 'POST'])
+def method():
+    if request.method == 'GET':
+        return 'GET으로 전송이다'
+    else:
+        num = request.form['num']
+        name = request.form['name']
+        print(num, name)
+        with open("static/save.txt", "w", encoding='utf-8') as f:
+            f.write("%s,%s" % (num, name))
+        return 'POST 이다 학번은: {} 이름은: {} '.format(num, name)
 
 
 @app.route('/naver')    
