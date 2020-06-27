@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, redirect, url_for, abort
 
 
 import game
+import json
 
 app = Flask(__name__)
 
@@ -16,34 +17,40 @@ def hello():
     return 'Hello, world!'
 
 
-
 @app.route('/hello/<name>')
 def hellovar(name):
-    character = game.set_character(name)
-    return "{0}님 반갑습니다." .format(character["닉네임"]) 
+    character = game.set_charact(name)
+    return render_template("gamestart.html", data = character )
 
-@app.route('/game')
-def ame():
-    return "{0}님 반갑습니다." .format(character["닉네임"]) 
+@app.route('/gamestart')
+def gamestart():
+    with open("static/save.txt", "r", encoding='utf-8') as f:
+        data = f.read()
+        character = json.loads(data)
+        print(character["AA"])
+    return "{}이 {}를 사용해서 이겼다." .format(character["닉네임"], [character["AA"]]) 
 
 
 
 @app.route('/input/<int:num>')    
-def input(num):
-    name =''
+def input_num(num):
     if num == 1:
-        name = '도라에몽'
+        with open("static/save.txt", "r", encoding='utf-8') as f:
+            data = f.read()
+            character = json.loads(data)
+            print(character["스킬"])
+        return "{}이 {}를 사용해서 이겼다." .format(character["닉네임"], [character["AA"]][0]) 
     elif num == 2:        
-        name = '진구'
+        return "도망갔다"
     elif num ==3:
         name = '퉁퉁이'
     else:
         return "없어요"
     return "hello {}".format(name)
 
-@app.route('/login')
-def login():
-    return render_template('login.html') 
+# @app.route('/login')
+# def login():
+#     return render_template('login.html') 
 
 
 
@@ -68,7 +75,6 @@ def login():
 
 
 
-
 @app.route('/form')
 def login():
     return render_template('test1.html')
@@ -85,6 +91,13 @@ def method():
         with open("static/save.txt", "w", encoding='utf-8') as f:
             f.write("%s,%s" % (num, name))
         return 'POST 이다 학번은: {} 이름은: {} '.format(num, name)
+
+@app.route('/getinfo')        
+def getinfo():
+    #파일 입력
+    with open("static/save.txt", "r", encoding="utf-8") as file:
+        student = file.read().split(',') #쉼표로잘라서 student에 배열로 저장
+    return '번호 : {}, 이름: {}'.format(student[0], student[1])
 
 
 @app.route('/naver')    
@@ -132,5 +145,3 @@ if __name__ == '__main__':
     #     print(url_for('daum'))
     #     print(url_for('naver'))
     app.run(debug=True)
-
-
